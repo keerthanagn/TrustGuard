@@ -158,7 +158,7 @@
     </div>
     <div class="statusline">
       <span class="chip ok"><span class="dot"></span>All phases complete</span>
-      <span class="chip">98 tests passing</span>
+      <span class="chip">101 tests passing</span>
       <span class="chip">live Q&amp;A verified</span>
     </div>
   </header>
@@ -181,7 +181,7 @@
         <div class="s">baselines: 0.00</div>
       </div>
       <div class="tile">
-        <div class="k">98</div>
+        <div class="k">101</div>
         <div class="l">Automated tests passing</div>
         <div class="s">unit · integration · workflow · rendering · security</div>
       </div>
@@ -243,12 +243,12 @@
     <div class="sec-head"><h2>Retrieval quality on labelled evidence</h2><span class="note">23 scored items</span></div>
     <div class="card scroll">
       <table>
-        <caption>Recall@k = gold provision in top-k; MRR = mean reciprocal rank of the first gold hit. Reranking earns its place.</caption>
+        <caption>Recall@k = gold provision in top-k; MRR = mean reciprocal rank of the first gold hit. A base-provision preference now ranks a general offence provision (e.g. theft §303) above aggravated variants, lifting Recall@1 to 0.91.</caption>
         <thead><tr><th>Configuration</th><th>MRR</th><th>Recall@1</th><th>Recall@5</th></tr></thead>
         <tbody>
-          <tr><td>BM25 (lexical only)</td><td>0.86</td><td>0.83</td><td>0.91</td></tr>
-          <tr><td>Hybrid (BM25 + dense)</td><td>0.88</td><td>0.83</td><td>0.96</td></tr>
-          <tr class="hl"><td>Hybrid + cross-encoder rerank</td><td><span class="best">0.92</span></td><td><span class="best">0.91</span></td><td>0.96</td></tr>
+          <tr><td>BM25 (lexical only)</td><td>0.91</td><td>0.91</td><td>0.91</td></tr>
+          <tr><td>Hybrid (BM25 + dense)</td><td>0.92</td><td>0.91</td><td>0.96</td></tr>
+          <tr class="hl"><td>Hybrid + cross-encoder rerank</td><td><span class="best">0.92</span></td><td><span class="best">0.91</span></td><td>0.91</td></tr>
         </tbody>
       </table>
     </div>
@@ -374,6 +374,6 @@ python -m streamlit run app.py&nbsp;&nbsp;<span style="color:var(--muted)"># ope
 
   <footer>
     <span>TrustGuard · Indian legal-domain LLM verification middleware</span>
-    <span class="mono">Updated 2026-10-26 · interactive Q&amp;A live · 98 tests · frozen_artifact_hash 9dff3803</span>
+    <span class="mono">Updated 2026-10-26 · interactive Q&amp;A live · 101 tests · frozen_artifact_hash d9965e77</span>
   </footer>
 </div>
