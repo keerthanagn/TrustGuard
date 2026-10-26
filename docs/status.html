@@ -158,8 +158,8 @@
     </div>
     <div class="statusline">
       <span class="chip ok"><span class="dot"></span>All phases complete</span>
-      <span class="chip">86 tests passing</span>
-      <span class="chip">commit f8eca18</span>
+      <span class="chip">92 tests passing</span>
+      <span class="chip">live Q&amp;A verified</span>
     </div>
   </header>
 
@@ -181,9 +181,9 @@
         <div class="s">baselines: 0.00</div>
       </div>
       <div class="tile">
-        <div class="k">86</div>
+        <div class="k">92</div>
         <div class="l">Automated tests passing</div>
-        <div class="s">unit · integration · security</div>
+        <div class="s">unit · integration · workflow · security</div>
       </div>
       <div class="tile">
         <div class="k">6/6</div>
@@ -336,6 +336,23 @@ question → <b>safety screen</b> → <b>retrieve</b> evidence<br>
     </div>
   </section>
 
+  <!-- HOW TO USE -->
+  <section>
+    <div class="sec-head"><h2>Using it to ask a legal question</h2><span class="note">the interactive workflow, verified live</span></div>
+    <div class="card">
+      <p style="margin:0 0 12px;color:var(--ink-2);font-size:.92rem">The Streamlit app's <b>Legal Query Workspace</b>
+        takes a question, runs it through the real pipeline and configured LLM (no canned answers), shows each
+        stage as it completes, and reveals the draft only if the release policy passes — otherwise an
+        explainable withholding, never the hidden draft. Verified end-to-end against a local Ollama model.</p>
+      <div class="flow">ollama serve &nbsp;·&nbsp; ollama pull qwen2.5:3b<br>
+python -m scripts.init_kb --no-download&nbsp;&nbsp;<span style="color:var(--muted)"># index the corpus</span><br>
+python -m streamlit run app.py&nbsp;&nbsp;<span style="color:var(--muted)"># open Legal Query Workspace</span></div>
+      <p style="margin:12px 0 0;color:var(--muted);font-size:.82rem">Example answered live: “punishment for extortion
+        under the BNS” → released, Section 308, cited to p.81, ~40 s on CPU. Out-of-corpus questions are withheld
+        as insufficient evidence, not answered from model memory.</p>
+    </div>
+  </section>
+
   <!-- STACK -->
   <section>
     <div class="sec-head"><h2>Stack &amp; reproduce</h2></div>
@@ -357,6 +374,6 @@ question → <b>safety screen</b> → <b>retrieve</b> evidence<br>
 
   <footer>
     <span>TrustGuard · Indian legal-domain LLM verification middleware</span>
-    <span class="mono">Updated 2026-10-26 · scripted backend · frozen_artifact_hash 9dff3803</span>
+    <span class="mono">Updated 2026-10-26 · interactive Q&amp;A live · 92 tests · frozen_artifact_hash 9dff3803</span>
   </footer>
 </div>
