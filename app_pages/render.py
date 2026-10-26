@@ -93,12 +93,12 @@ def render_report(data: dict, rehydrate):
                     st.caption("Repair feedback used:")
                     st.code(a["prompt_feedback"], language="text")
 
-    # timings
+    # timings — rendered as Markdown (no pyarrow/dataframe dependency) so a serialization-library
+    # failure can never block the answer/withholding shown above.
     if data.get("timings"):
-        from core.reporting import aggregate_timings
-        agg = aggregate_timings(data["timings"])
+        from core.reporting import timings_markdown
         with st.expander("Component timings (ms)"):
-            st.table([{"stage": k, "ms": round(v, 0)} for k, v in agg.items()])
+            st.markdown(timings_markdown(data["timings"]))
 
     if data.get("errors"):
         with st.expander("Technical notes"):

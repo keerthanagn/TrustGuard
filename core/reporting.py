@@ -23,6 +23,13 @@ def aggregate_timings(timings) -> dict[str, float]:
     return agg
 
 
+def timings_markdown(timings) -> str:
+    """Render per-stage timings as a Markdown table (no dataframe/pyarrow dependency)."""
+    agg = aggregate_timings(timings)
+    rows = "\n".join(f"| {k} | {v:.0f} |" for k, v in agg.items())
+    return f"| Stage | ms |\n| --- | ---: |\n{rows}"
+
+
 def report_to_json(report: TrustReport, include_drafts: bool = True) -> str:
     return json.dumps(report.to_dict(include_drafts=include_drafts), ensure_ascii=False, indent=2)
 
