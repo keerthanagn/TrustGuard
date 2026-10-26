@@ -1,0 +1,173 @@
+{
+  "generated_at": "2026-10-26T16:31:37+00:00",
+  "note": "Integrity manifest. 'test' is CONSUMED (not held-out). 'final_test_v1' is the current frozen final set: do not use it to tune thresholds, select models, or debug examples. All labels are single-reviewer, model-authored (no independent human verification yet) - see STATUS.md.",
+  "splits": {
+    "dev": {
+      "present": true,
+      "file": "dev.jsonl",
+      "sha256": "6826adc2523aae3e33553ac3684f3b49738ce31e387c34e918ddc57f13e7c0fc",
+      "n_items": 30,
+      "status": "active",
+      "categories": {
+        "benign_about_malicious": 3,
+        "fabricated_section": 3,
+        "harmful_request": 3,
+        "insufficient_evidence": 3,
+        "invented_minimum_fine": 2,
+        "missing_exception": 1,
+        "out_of_scope": 1,
+        "outdated_law": 2,
+        "supported": 9,
+        "wrong_punishment": 3
+      },
+      "gold_provisions": [
+        "BNS:100",
+        "BNS:103",
+        "BNS:105",
+        "BNS:107",
+        "BNS:303",
+        "BNS:318",
+        "COI:14",
+        "COI:19",
+        "COI:21",
+        "IPC:420",
+        "ITA:66",
+        "ITA:66A",
+        "ITA:66C",
+        "ITA:66D",
+        "ITA:66F"
+      ],
+      "review_status": [
+        "unspecified"
+      ],
+      "annotators": [
+        "unspecified"
+      ]
+    },
+    "test": {
+      "present": true,
+      "file": "test.jsonl",
+      "sha256": "b620f756c91fbcfa12fdf8712f98d58b306cb2eb2734d777a8b5ffde793f3b66",
+      "n_items": 36,
+      "status": "consumed",
+      "categories": {
+        "ambiguous": 2,
+        "benign_about_malicious": 3,
+        "conflicting_evidence": 1,
+        "fabricated_section": 3,
+        "harmful_request": 3,
+        "insufficient_evidence": 2,
+        "invented_minimum_fine": 2,
+        "misleading_premise": 2,
+        "missing_exception": 2,
+        "out_of_scope": 1,
+        "outdated_law": 2,
+        "supported": 9,
+        "wrong_punishment": 4
+      },
+      "gold_provisions": [
+        "BNS:103",
+        "BNS:107",
+        "BNS:22",
+        "BNS:303",
+        "BNS:309",
+        "BNS:314",
+        "BNS:316",
+        "BNS:324",
+        "BNS:34",
+        "BNS:356",
+        "COI:21A",
+        "COI:300A",
+        "COI:32",
+        "IPC:302",
+        "ITA:66",
+        "ITA:66A",
+        "ITA:66C",
+        "ITA:66D",
+        "ITA:66F",
+        "ITA:67",
+        "ITA:72"
+      ],
+      "review_status": [
+        "unspecified"
+      ],
+      "annotators": [
+        "unspecified"
+      ]
+    },
+    "final_test_v1": {
+      "present": true,
+      "file": "final_test_v1.jsonl",
+      "sha256": "2cdbecffd07108f31deca9422d7ed3a06dbfa9d86009be15988e900d2cceb2aa",
+      "n_items": 33,
+      "status": "frozen",
+      "categories": {
+        "ambiguous": 1,
+        "benign_about_malicious": 3,
+        "conflicting_evidence": 1,
+        "fabricated_section": 3,
+        "harmful_request": 2,
+        "insufficient_evidence": 2,
+        "invented_minimum_fine": 2,
+        "misleading_premise": 2,
+        "missing_exception": 2,
+        "out_of_scope": 1,
+        "outdated_law": 2,
+        "prompt_injection": 1,
+        "supported": 8,
+        "wrong_punishment": 3
+      },
+      "gold_provisions": [
+        "BNS:115",
+        "BNS:296",
+        "BNS:304",
+        "BNS:308",
+        "BNS:319",
+        "BNS:351",
+        "COI:15",
+        "COI:23",
+        "COI:25",
+        "IPC:378",
+        "ITA:66A",
+        "ITA:70"
+      ],
+      "review_status": [
+        "single_reviewer_model_authored"
+      ],
+      "annotators": [
+        "model"
+      ]
+    },
+    "benchmark": {
+      "present": false
+    }
+  },
+  "leakage": {
+    "dev_vs_final_test_v1": {
+      "splits": [
+        "dev",
+        "final_test_v1"
+      ],
+      "disallowed_shared_refs": [],
+      "allowed_shared_refs": [
+        "ITA:66A"
+      ],
+      "exact_question_duplicates": [],
+      "near_duplicates": [],
+      "clean": true
+    },
+    "test_vs_final_test_v1": {
+      "splits": [
+        "test",
+        "final_test_v1"
+      ],
+      "disallowed_shared_refs": [],
+      "allowed_shared_refs": [
+        "ITA:66A"
+      ],
+      "exact_question_duplicates": [],
+      "near_duplicates": [],
+      "clean": true
+    }
+  }
+}

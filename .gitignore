@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Environment & secrets
+.env
+
+# TrustGuard data & artifacts (regenerable)
+data/trustguard.db
+data/kb/
+data/legal_pdfs/
+data/seed_pdfs/
+config/calibrated.yaml
+reports/eval/
+reports/samples/*.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log

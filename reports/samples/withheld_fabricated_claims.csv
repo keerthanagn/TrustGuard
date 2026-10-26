@@ -1,0 +1,4 @@
+request_id,attempt,claim_id,material,status,reason,cited_refs,supporting_citations,contradicting_citations,signals
+SAMPLE-withheld_fabricated,0,C1,True,CONTRADICTED,"Section 499 does not exist in the Bharatiya Nyaya Sanhita, 2023 as indexed; the reference appears to be fabricated or mis-numbered.",BNS 499,,,currency=; statutory=fail
+SAMPLE-withheld_fabricated,1,C1,True,CONTRADICTED,"Section 499 does not exist in the Bharatiya Nyaya Sanhita, 2023 as indexed; the reference appears to be fabricated or mis-numbered.",BNS 499,,,currency=; statutory=fail
+SAMPLE-withheld_fabricated,2,C1,True,CONTRADICTED,"Section 499 does not exist in the Bharatiya Nyaya Sanhita, 2023 as indexed; the reference appears to be fabricated or mis-numbered.",BNS 499,,,currency=; statutory=fail

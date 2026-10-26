@@ -1,0 +1,28 @@
+# TrustGuard API + Ollama. Run:  docker compose up --build
+# The Streamlit UI can run on the host (streamlit run app.py) pointing at the API, or be added here.
+services:
+  ollama:
+    image: ollama/ollama:0.4.11
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    # First run: `docker compose exec ollama ollama pull qwen2.5:3b`
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      TRUSTGUARD_LLM_BASE_URL: http://ollama:11434
+      HF_HOME: /app/.hf_cache
+    volumes:
+      - ./data:/app/data          # persist the SQLite DB, index and PDFs
+      - ./reports:/app/reports
+      - hf_cache:/app/.hf_cache   # persist downloaded verification models
+    depends_on:
+      - ollama
+
+volumes:
+  ollama_models:
+  hf_cache:
