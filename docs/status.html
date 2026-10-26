@@ -1,0 +1,362 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>TrustGuard Build Status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: a scanned status board — summary tiles up top, evidence (chart, tables, timeline) below.
+     Identity: cool legal "ink on paper", one teal accent, semantic good/warn/bad for verification states. */
+  :root {
+    --paper: #f5f7f9; --surface: #ffffff; --surface-2: #eef2f5;
+    --ink: #151c24; --ink-2: #44525f; --muted: #7a8793; --line: #dce3e9;
+    --accent: #0e6b74; --accent-ink: #0a4e55;
+    --good: #1a7f4b; --good-bg: #e6f4ec; --warn: #b4690e; --bad: #b42318; --bad-bg: #fcebe9;
+    --shadow: 0 1px 2px rgba(20,28,36,.06), 0 8px 24px rgba(20,28,36,.05);
+    --display: "Spectral", Georgia, serif;
+    --body: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    color-scheme: light;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #0e141a; --surface: #161f28; --surface-2: #1e2932;
+      --ink: #eef3f7; --ink-2: #b4c1cc; --muted: #7e8c98; --line: #273540;
+      --accent: #4bc3c3; --accent-ink: #8fe0df;
+      --good: #4cc98a; --good-bg: #123023; --warn: #e0a24a; --bad: #f08a80; --bad-bg: #37201e;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0e141a; --surface: #161f28; --surface-2: #1e2932;
+    --ink: #eef3f7; --ink-2: #b4c1cc; --muted: #7e8c98; --line: #273540;
+    --accent: #4bc3c3; --accent-ink: #8fe0df;
+    --good: #4cc98a; --good-bg: #123023; --warn: #e0a24a; --bad: #f08a80; --bad-bg: #37201e;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--body);
+         line-height: 1.55; margin: 0; }
+  .wrap { max-width: 1060px; margin: 0 auto;
+          padding-left: max(18px, env(safe-area-inset-left, 0px));
+          padding-right: max(18px, env(safe-area-inset-right, 0px));
+          padding-block: 40px 64px; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; }
+  a { color: var(--accent-ink); }
+  .eyebrow { font-family: var(--mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+             color: var(--muted); }
+
+  /* header */
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 22px;
+           border-bottom: 1px solid var(--line); padding-bottom: 22px; }
+  header .title { flex: 1 1 320px; }
+  h1 { font-size: clamp(1.9rem, 4.6vw, 2.8rem); letter-spacing: -.01em; }
+  .tagline { color: var(--ink-2); max-width: 60ch; margin-top: 8px; font-size: 1.02rem; }
+  .statusline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: .76rem;
+          padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
+          color: var(--ink-2); white-space: nowrap; }
+  .chip.ok { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, var(--line)); background: var(--good-bg); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+  .disclaimer { margin-top: 18px; font-size: .86rem; color: var(--ink-2);
+                border-left: 3px solid var(--accent); background: var(--surface-2);
+                padding: 10px 14px; border-radius: 0 8px 8px 0; }
+
+  section { margin-top: 44px; }
+  .sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+  .sec-head h2 { font-size: 1.32rem; }
+  .sec-head .note { color: var(--muted); font-size: .84rem; }
+
+  /* stat tiles */
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+          padding: 16px 16px 15px; box-shadow: var(--shadow); }
+  .tile .k { font-family: var(--display); font-weight: 700; font-size: 2rem; letter-spacing: -.02em;
+             font-variant-numeric: tabular-nums; line-height: 1.05; }
+  .tile .l { color: var(--ink-2); font-size: .82rem; margin-top: 6px; }
+  .tile .s { color: var(--muted); font-size: .74rem; margin-top: 2px; font-family: var(--mono); }
+  .tile.hero .k { color: var(--good); }
+
+  /* chart */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+          padding: 20px 22px; box-shadow: var(--shadow); }
+  .chart { display: grid; gap: 14px; margin: 6px 0 4px; }
+  .barrow { display: grid; grid-template-columns: 130px 1fr; gap: 14px; align-items: center; }
+  .barrow .name { font-size: .9rem; font-weight: 500; }
+  .barrow .name small { display: block; color: var(--muted); font-weight: 400; font-size: .72rem; font-family: var(--mono); }
+  .track { position: relative; height: 30px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
+  .fill { position: absolute; inset: 0 auto 0 0; border-radius: 6px; display: flex; align-items: center;
+          justify-content: flex-end; padding-right: 9px; color: #fff; font-family: var(--mono);
+          font-size: .78rem; font-variant-numeric: tabular-nums; min-width: 2px; }
+  .fill.bad { background: var(--bad); }
+  .fill.good { background: var(--good); justify-content: flex-start; padding-left: 9px; color: var(--good);
+               background: var(--good-bg); border: 1px solid color-mix(in srgb, var(--good) 45%, transparent); }
+  .axis { display: flex; justify-content: space-between; margin-left: 144px; margin-top: 2px;
+          font-family: var(--mono); font-size: .68rem; color: var(--muted); }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; font-size: .78rem; color: var(--ink-2); }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+
+  /* tables */
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .86rem; }
+  caption { text-align: left; color: var(--muted); font-size: .8rem; padding-bottom: 8px; }
+  th, td { text-align: right; padding: 9px 12px; border-bottom: 1px solid var(--line); white-space: nowrap;
+           font-variant-numeric: tabular-nums; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { color: var(--muted); font-weight: 500; font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; }
+  tbody tr.hl td { background: var(--good-bg); }
+  tbody tr.hl td:first-child { font-weight: 600; }
+  td .best { color: var(--good); font-weight: 600; }
+
+  /* timeline */
+  .phases { display: grid; gap: 12px; }
+  .phase { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start;
+           background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .phase .mark { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
+                 background: var(--good-bg); color: var(--good); font-family: var(--mono); font-weight: 500;
+                 font-size: .8rem; border: 1px solid color-mix(in srgb, var(--good) 35%, transparent); }
+  .phase h3 { font-size: 1rem; font-family: var(--body); font-weight: 600; }
+  .phase p { margin: 4px 0 0; color: var(--ink-2); font-size: .88rem; }
+  .phase .tag { font-family: var(--mono); font-size: .68rem; color: var(--muted); }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  ul.clean { margin: 0; padding-left: 1.1em; color: var(--ink-2); font-size: .9rem; }
+  ul.clean li { margin: 6px 0; }
+  .pill { display: inline-block; font-family: var(--mono); font-size: .72rem; padding: 2px 8px; border-radius: 6px;
+          border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2); margin: 3px 4px 0 0; }
+  .pill.active { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, var(--line)); }
+  .pill.consumed { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, var(--line)); }
+  .pill.frozen { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+  code, .mono { font-family: var(--mono); font-size: .82em; }
+  .flow { font-family: var(--mono); font-size: .82rem; color: var(--ink-2); background: var(--surface-2);
+          border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; line-height: 1.9; overflow-x: auto; }
+  .flow b { color: var(--accent-ink); font-weight: 500; }
+  footer { margin-top: 52px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted);
+           font-size: .78rem; display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
+
+  @media (max-width: 720px) {
+    .tiles { grid-template-columns: repeat(2, 1fr); }
+    .grid2 { grid-template-columns: 1fr; }
+    .barrow { grid-template-columns: 96px 1fr; }
+    .axis { margin-left: 110px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .fill { transition: width .5s cubic-bezier(.2,.7,.2,1); }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="title">
+      <div class="eyebrow">Project status board</div>
+      <h1>TrustGuard Build Status</h1>
+      <p class="tagline">An LLM-independent middleware that verifies a model's Indian-legal answers against
+        traceable evidence and withholds anything that fails its checks.</p>
+    </div>
+    <div class="statusline">
+      <span class="chip ok"><span class="dot"></span>All phases complete</span>
+      <span class="chip">86 tests passing</span>
+      <span class="chip">commit f8eca18</span>
+    </div>
+  </header>
+
+  <div class="disclaimer">Research prototype for legal <b>information verification</b> — not legal advice, and
+    not claimed to be safe for unsupervised use. Scores come from a small, single-reviewer benchmark;
+    they are a measured improvement, not proof of correctness.</div>
+
+  <!-- SUMMARY TILES -->
+  <section aria-label="Headline figures">
+    <div class="tiles">
+      <div class="tile hero">
+        <div class="k">0.00</div>
+        <div class="l">Unsupported-claim acceptance (TrustGuard)</div>
+        <div class="s">vs 0.70 baseline · frozen set</div>
+      </div>
+      <div class="tile">
+        <div class="k">1.00</div>
+        <div class="l">Hallucination-detection F1</div>
+        <div class="s">baselines: 0.00</div>
+      </div>
+      <div class="tile">
+        <div class="k">86</div>
+        <div class="l">Automated tests passing</div>
+        <div class="s">unit · integration · security</div>
+      </div>
+      <div class="tile">
+        <div class="k">6/6</div>
+        <div class="l">Delivery phases complete</div>
+        <div class="s">audit · P0–P3 · API</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEADLINE CHART -->
+  <section>
+    <div class="sec-head">
+      <h2>Does the middleware reduce unsupported legal claims?</h2>
+      <span class="note">frozen held-out set · 33 items · scripted backend</span>
+    </div>
+    <div class="card">
+      <div class="chart" role="img" aria-label="Unsupported-claim acceptance: base 0.70, retrieval 0.70, TrustGuard 0.00">
+        <div class="barrow">
+          <div class="name">Base LLM<small>no checks</small></div>
+          <div class="track"><div class="fill bad" style="width:70%">0.70</div></div>
+        </div>
+        <div class="barrow">
+          <div class="name">LLM + retrieval<small>RAG, no gate</small></div>
+          <div class="track"><div class="fill bad" style="width:70%">0.70</div></div>
+        </div>
+        <div class="barrow">
+          <div class="name">TrustGuard<small>full pipeline</small></div>
+          <div class="track"><div class="fill good" style="width:100%">0.00 &nbsp;[0.00–0.00 95% CI]</div></div>
+        </div>
+      </div>
+      <div class="axis"><span>0.0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>1.0</span></div>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--bad)"></span>Accepted a false/unsupported answer — lower is better</span>
+        <span><span class="swatch" style="background:var(--good)"></span>Withheld it</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE-SYSTEM TABLE -->
+  <section>
+    <div class="sec-head"><h2>Three-system comparison</h2><span class="note">same questions, frozen set</span></div>
+    <div class="card scroll">
+      <table>
+        <caption>Hallucination F1 and safety F1 higher is better; acceptance and rejection rates lower is better.</caption>
+        <thead><tr><th>System</th><th>Halluc. F1</th><th>Unsupp. accept.</th><th>Valid rej.</th><th>Safety F1</th><th>Mean ms</th></tr></thead>
+        <tbody>
+          <tr><td>Base LLM</td><td>0.00</td><td>0.70</td><td>0.00</td><td>1.00</td><td>2,279</td></tr>
+          <tr><td>LLM + retrieval</td><td>0.00</td><td>0.70</td><td>0.00</td><td>1.00</td><td>2,807</td></tr>
+          <tr class="hl"><td>TrustGuard</td><td><span class="best">1.00</span></td><td><span class="best">0.00</span></td><td>0.00</td><td>1.00</td><td>4,233</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- RETRIEVAL -->
+  <section>
+    <div class="sec-head"><h2>Retrieval quality on labelled evidence</h2><span class="note">23 scored items</span></div>
+    <div class="card scroll">
+      <table>
+        <caption>Recall@k = gold provision in top-k; MRR = mean reciprocal rank of the first gold hit. Reranking earns its place.</caption>
+        <thead><tr><th>Configuration</th><th>MRR</th><th>Recall@1</th><th>Recall@5</th></tr></thead>
+        <tbody>
+          <tr><td>BM25 (lexical only)</td><td>0.86</td><td>0.83</td><td>0.91</td></tr>
+          <tr><td>Hybrid (BM25 + dense)</td><td>0.88</td><td>0.83</td><td>0.96</td></tr>
+          <tr class="hl"><td>Hybrid + cross-encoder rerank</td><td><span class="best">0.92</span></td><td><span class="best">0.91</span></td><td>0.96</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PHASES (a real delivery sequence) -->
+  <section>
+    <div class="sec-head"><h2>Delivery timeline</h2><span class="note">built incrementally, tests after each step</span></div>
+    <div class="phases">
+      <div class="phase"><div class="mark">✓</div><div>
+        <h3>Build &amp; audit <span class="tag">· reproduced, not assumed</span></h3>
+        <p>End-to-end middleware (retrieval → generate → claims → verify → safety → bounded repair → strict release),
+           then a repository audit that re-ran tests and metrics and surfaced the consumed-test-set and leakage risks.</p></div></div>
+      <div class="phase"><div class="mark">P0</div><div>
+        <h3>Data integrity &amp; honest held-out evaluation</h3>
+        <p>Frozen <code>final_test_v1</code> (provisions disjoint from dev), SHA-256 manifests, leakage checker,
+           and a frozen-artifact hash stamped into every run. The consumed test split is labelled as such.</p></div></div>
+      <div class="phase"><div class="mark">P1</div><div>
+        <h3>Retrieval metrics &amp; consumption guard</h3>
+        <p>Recall@k / MRR with a config comparison, plus a freeze-ledger that auto-flags the frozen set if code
+           changes between runs.</p></div></div>
+      <div class="phase"><div class="mark">P2</div><div>
+        <h3>Legal provenance &amp; multi-format ingestion</h3>
+        <p>Document type, court, citation, effective/amendment dates and licence in the schema; PDF + TXT + DOCX;
+           scanned-PDF detection that fails clearly instead of indexing empty text.</p></div></div>
+      <div class="phase"><div class="mark">P3</div><div>
+        <h3>Engineering hardening</h3>
+        <p>Git + pinned dependencies, a tamper-evident audit hash chain, privacy-conscious retention, and an
+           admin gate on sensitive surfaces.</p></div></div>
+      <div class="phase"><div class="mark">API</div><div>
+        <h3>REST admin gate</h3>
+        <p>The same token gate on <code>/history</code>, <code>/report</code>, <code>/documents</code> and the
+           <code>/admin/*</code> maintenance endpoints, with tests.</p></div></div>
+    </div>
+  </section>
+
+  <!-- INTEGRITY + ARCHITECTURE -->
+  <section>
+    <div class="grid2">
+      <div>
+        <div class="sec-head"><h2>Dataset integrity</h2></div>
+        <div class="card">
+          <p style="margin:0 0 10px;color:var(--ink-2);font-size:.9rem">Three splits, each with a declared role and a
+            recorded hash. Leakage checks between them: <b style="color:var(--good)">CLEAN</b>.</p>
+          <div>
+            <span class="pill active">dev · 30 · tuning</span>
+            <span class="pill consumed">test · 36 · consumed</span>
+            <span class="pill frozen">final_test_v1 · 33 · frozen</span>
+          </div>
+          <ul class="clean" style="margin-top:12px">
+            <li><b>Labels:</b> single-reviewer, model-authored — no independent human verification yet.</li>
+            <li><b>Thresholds</b> calibrated on <code>dev</code> only, frozen before the held-out run.</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="sec-head"><h2>Verification pipeline</h2></div>
+        <div class="card">
+          <div class="flow">
+question → <b>safety screen</b> → <b>retrieve</b> evidence<br>
+&nbsp;&nbsp;→ draft (held back) → <b>atomic claims</b><br>
+&nbsp;&nbsp;→ 9 independent signals: NLI · numeric ·<br>
+&nbsp;&nbsp;&nbsp;&nbsp;statute · currency · attribution · scope…<br>
+&nbsp;&nbsp;→ bounded repair → <b>strict release</b><br>
+&nbsp;&nbsp;→ released answer <b>or</b> explainable withholding
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIMITATIONS -->
+  <section>
+    <div class="sec-head"><h2>Known limitations</h2><span class="note">stated, not papered over</span></div>
+    <div class="card">
+      <ul class="clean">
+        <li>Labels are single-reviewer and model-authored; a publishable benchmark needs independent human
+          annotation and a second reviewer.</li>
+        <li>The benchmark is small (33 frozen items), so intervals are wide and the perfect frozen scores will
+          drop on a larger, independently labelled set.</li>
+        <li>Corpus is three statutes (BNS 2023, IT Act 2000, Constitution); the schema supports judgments and
+          other laws, but no large case-law corpus is ingested.</li>
+        <li>The admin gate is a single static token, appropriate for one node — not multi-user authentication.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section>
+    <div class="sec-head"><h2>Stack &amp; reproduce</h2></div>
+    <div class="card">
+      <div>
+        <span class="pill">Ollama / OpenAI-compatible</span><span class="pill">sentence-transformers</span>
+        <span class="pill">FAISS + BM25</span><span class="pill">cross-encoder NLI</span>
+        <span class="pill">FastAPI</span><span class="pill">Streamlit</span><span class="pill">SQLite</span>
+        <span class="pill">PyMuPDF · python-docx</span><span class="pill">pytest</span>
+      </div>
+      <ul class="clean" style="margin-top:14px">
+        <li><code>python -m evaluation.calibrate</code> — tune thresholds on dev</li>
+        <li><code>python -m evaluation.run_eval --split final_test_v1</code> — frozen held-out comparison</li>
+        <li><code>python -m evaluation.retrieval_eval --split final_test_v1</code> — recall@k / MRR</li>
+        <li><code>python -m pytest -q</code> — full test suite</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <span>TrustGuard · Indian legal-domain LLM verification middleware</span>
+    <span class="mono">Updated 2026-10-26 · scripted backend · frozen_artifact_hash 9dff3803</span>
+  </footer>
+</div>
