@@ -95,9 +95,8 @@ def render_report(data: dict, rehydrate):
 
     # timings
     if data.get("timings"):
-        agg: dict[str, float] = {}
-        for t in data["timings"]:
-            agg[t["stage"]] = agg.get(t["stage"], 0.0) + t["ms"]
+        from core.reporting import aggregate_timings
+        agg = aggregate_timings(data["timings"])
         with st.expander("Component timings (ms)"):
             st.table([{"stage": k, "ms": round(v, 0)} for k, v in agg.items()])
 

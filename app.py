@@ -20,6 +20,7 @@ import pandas as pd
 import streamlit as st
 
 from app_pages.render import render_report
+from core.reporting import aggregate_timings
 from app_pages.ui_common import available_models, badge, get_base_settings, get_db, header
 from core.models import DocStatus
 from middleware.pipeline import build_pipeline
@@ -104,30 +105,30 @@ def page_query():
             st.error(f"A system error occurred; no answer is released. Details: {exc}")
             return
         elapsed = time.time() - t
+        # Serialize once to the dict form the rest of the UI uses, so stage access is consistent.
+        data = report.to_dict(include_drafts=True)
 
         # Per-stage status reflecting the stages that actually ran (from backend timings), not a fixed list.
         STAGE_LABELS = {"question_safety": "Screened the question for malicious intent",
                         "retrieval": "Retrieved legal evidence", "generation": "Generated a draft (held back)",
                         "claim_extraction": "Extracted atomic claims", "verification": "Verified claims vs evidence",
                         "answer_safety": "Screened the draft for unsafe content"}
-        agg: dict[str, float] = {}
-        for tm in report.timings:
-            agg[tm["stage"]] = agg.get(tm["stage"], 0.0) + tm["ms"]
+        agg = aggregate_timings(data["timings"])
         with stages:
             for stage, label in STAGE_LABELS.items():
                 if stage in agg:
                     st.write(f"✓ {label} · {agg[stage]:.0f} ms")
-            if report.retries:
-                st.write(f"↻ Repaired and re-verified · {report.retries} retry(ies)")
-        is_error = report.decision_category in ("SYSTEM_ERROR",)
-        verdict = "RELEASED" if report.decision.value == "RELEASED" else f"WITHHELD · {report.decision_category}"
-        stages.update(label=f"{verdict} · {elapsed:.1f}s · {report.model}",
+            if data["retries"]:
+                st.write(f"↻ Repaired and re-verified · {data['retries']} retry(ies)")
+        is_error = data["decision_category"] == "SYSTEM_ERROR"
+        verdict = "RELEASED" if data["decision"] == "RELEASED" else f"WITHHELD · {data['decision_category']}"
+        stages.update(label=f"{verdict} · {elapsed:.1f}s · {data['model']}",
                       state="error" if is_error else "complete", expanded=False)
 
-        st.session_state["last_report"] = report.to_dict(include_drafts=True)
+        st.session_state["last_report"] = data
         st.session_state["q"] = question
         st.divider()
-        render_report(st.session_state["last_report"], rehydrate)
+        render_report(data, rehydrate)
         st.caption("Full details, evidence and downloads are also on the **Verification Results** page.")
     elif run:
         st.error("Enter a question first.")

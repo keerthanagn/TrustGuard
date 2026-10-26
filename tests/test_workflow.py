@@ -75,3 +75,25 @@ def test_stage_timings_recorded_per_stage(settings, db, index):
     report = _pipe(settings, db, index, [CORRECT]).run(Q, persist=False)
     assert all(t.ms >= 0 for t in report.timings)
     assert len(report.timings) >= 3
+
+
+def test_aggregate_timings_accepts_objects_and_dicts(settings, db, index):
+    """Regression for 'StageTiming object is not subscriptable': the UI aggregates a live report's
+    StageTiming objects, while render/API use the serialized dicts. One helper must handle both."""
+    from core.reporting import aggregate_timings
+    report = _pipe(settings, db, index, [CORRECT]).run(Q, persist=False)
+
+    # live objects (what app.py page_query used to mishandle with dict-subscript)
+    from_objects = aggregate_timings(report.timings)
+    # serialized dicts (what render.py / the API pass around)
+    from_dicts = aggregate_timings(report.to_dict()["timings"])
+
+    assert from_objects and from_objects == from_dicts
+    assert "retrieval" in from_objects and all(v >= 0 for v in from_objects.values())
+
+
+def test_markdown_report_renders_timings(settings, db, index):
+    from core.reporting import report_to_markdown
+    report = _pipe(settings, db, index, [CORRECT]).run(Q, persist=False)
+    md = report_to_markdown(report)
+    assert "Component Timings (ms)" in md and "retrieval:" in md

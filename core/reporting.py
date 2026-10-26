@@ -8,6 +8,21 @@ import json
 from core.models import TrustReport
 
 
+def aggregate_timings(timings) -> dict[str, float]:
+    """Sum per-stage milliseconds for the component-timing view.
+
+    Accepts either StageTiming objects (the live TrustReport) or their serialized dicts (the output of
+    TrustReport.to_dict, which the UI and API pass around), so every consumer uses one implementation
+    instead of re-deriving the stage/ms access and risking an object-vs-dict mismatch.
+    """
+    agg: dict[str, float] = {}
+    for t in timings:
+        stage = t["stage"] if isinstance(t, dict) else t.stage
+        ms = t["ms"] if isinstance(t, dict) else t.ms
+        agg[stage] = agg.get(stage, 0.0) + ms
+    return agg
+
+
 def report_to_json(report: TrustReport, include_drafts: bool = True) -> str:
     return json.dumps(report.to_dict(include_drafts=include_drafts), ensure_ascii=False, indent=2)
 
@@ -100,9 +115,6 @@ def report_to_markdown(report: TrustReport) -> str:
         lines += ["", "## Technical Notes"] + [f"- {e}" for e in d.errors]
 
     lines += ["", "## Component Timings (ms)"]
-    agg: dict[str, float] = {}
-    for t in d.timings:
-        agg[t.stage] = agg.get(t.stage, 0.0) + t.ms
-    for stage, ms in agg.items():
+    for stage, ms in aggregate_timings(d.timings).items():
         lines.append(f"- {stage}: {ms:.0f}")
     return "\n".join(lines)
