@@ -193,6 +193,23 @@ class HybridIndex:
         order = np.argsort(-scores)[:k]
         return [int(i) for i in order if scores[i] > 0]
 
+    @staticmethod
+    def _heading_affinity(q_tokens: set[str], heading: str) -> float:
+        """How concisely a provision's heading is 'about' the query terms.
+
+        A base provision's heading ("Theft") fully matched by the query scores ~1.0; an aggravated or
+        qualified variant ("Theft after preparation made for causing death, hurt or restraint") shares the
+        same offence word but dilutes it with qualifier tokens, so it scores low. This lets a general
+        offence query prefer the general provision over a special one, without hardcoding any offence.
+        """
+        if not heading:
+            return 0.0
+        h = set(tokenize(heading))
+        if not h:
+            return 0.0
+        overlap = len(q_tokens & h)
+        return overlap / len(h) if overlap else 0.0
+
     def search(self, query: str, top_k: int | None = None, rerank: bool | None = None) -> list[Evidence]:
         cfg = self.settings.retrieval
         top_k = top_k or cfg["top_k"]
@@ -225,9 +242,17 @@ class HybridIndex:
             return []
         n_channels = 2 if self.semantic_ok else 1
         max_rrf = n_channels / (rrf_k + 1)
-        ranked = sorted(fused, key=fused.get, reverse=True)[: max(top_k * 3, 15)]
+        # Generous candidate pool so a base provision sitting in the mid-ranks still reaches reranking.
+        ranked = sorted(fused, key=fused.get, reverse=True)[: max(top_k * 5, 40)]
         use_rerank = cfg.get("use_reranker", True) if rerank is None else rerank
-        scores = {i: min(1.0, fused[i] / max_rrf) for i in ranked}
+        fusion_norm = {i: min(1.0, fused[i] / max_rrf) for i in ranked}
+        # base-provision preference: small, general boost toward concise headings matching the query,
+        # so a general offence query ranks the base provision above aggravated/qualified variants.
+        q_tokens = set(tokenize(query))
+        # quadratic: a heading fully covered by the query (the base offence, e.g. "Theft") gets the full
+        # boost; a qualified variant that shares only the offence word gets almost none.
+        aff = {i: 0.4 * self._heading_affinity(q_tokens, self.chunks[i].heading) ** 2 for i in ranked}
+        raw: dict[int, float] = {}  # unclamped ranking score (the 1.0 display clamp must not collapse order)
         if use_rerank and cfg.get("reranker_model"):
             try:
                 ce = get_cross_encoder(cfg["reranker_model"])
@@ -235,15 +260,17 @@ class HybridIndex:
                                     show_progress_bar=False)
                 for i, lg in zip(ranked, np.atleast_1d(logits)):
                     rel = 1.0 / (1.0 + math.exp(-float(lg)))
-                    # blend: reranker judges relevance, fusion keeps exact-reference hits from being dropped
                     bonus = 0.25 if "section_lookup" in sources[i] else 0.0
-                    scores[i] = min(1.0, 0.75 * rel + 0.25 * scores[i] + bonus)
+                    raw[i] = 0.75 * rel + 0.25 * fusion_norm[i] + bonus + aff[i]
                     if "rerank" not in sources[i]:
                         sources[i].append("rerank")
             except Exception as exc:
                 log.warning("Reranker unavailable (%s); using fusion scores", exc)
-        best = sorted(ranked, key=lambda i: scores[i], reverse=True)[:top_k]
-        return [self.to_evidence(i, scores[i], sources[i]) for i in best]
+                raw = {i: fusion_norm[i] + aff[i] for i in ranked}
+        else:
+            raw = {i: fusion_norm[i] + aff[i] for i in ranked}
+        best = sorted(ranked, key=lambda i: raw[i], reverse=True)[:top_k]
+        return [self.to_evidence(i, min(1.0, raw[i]), sources[i]) for i in best]
 
 
 class RetrieverRegistry:

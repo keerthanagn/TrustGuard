@@ -20,6 +20,12 @@ FIXTURE_CHUNKS = [
     ("BNS", "103", "Section", "Punishment for murder",
      "103. (1) Whoever commits murder shall be punished with death or imprisonment for life, and shall also be "
      "liable to fine."),
+    ("BNS", "303", "Section", "Theft",
+     "303. (2) Whoever commits theft shall be punished with imprisonment of either description for a term which "
+     "may extend to three years, or with fine, or with both."),
+    ("BNS", "307", "Section", "Theft after preparation made for causing death, hurt or restraint",
+     "307. Whoever commits theft, having made preparation for causing death, or hurt, or restraint, shall be "
+     "punished with rigorous imprisonment for a term which may extend to ten years, and shall also be liable to fine."),
     ("BNS", "309", "Section", "Punishment for robbery",
      "309. (4) Whoever commits robbery shall be punished with rigorous imprisonment for a term which may extend "
      "to ten years and shall also be liable to fine."),
