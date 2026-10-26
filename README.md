@@ -166,15 +166,19 @@ the dense retriever and the reranker rather than assuming them.
 
 `uvicorn api.server:app --port 8000` then:
 
-| Method | Path | Purpose |
-|---|---|---|
-| GET | `/health` | status, document count, available backends |
-| POST | `/query` | `{question, mode, acts?, model?, max_retries?}` → full report JSON |
-| GET | `/report/{id}?fmt=json\|markdown\|csv` | stored report in the chosen format |
-| GET | `/history?text=&decision=` | audit search |
-| GET | `/documents` | knowledge-base listing |
+| Method | Path | Purpose | Admin |
+|---|---|---|---|
+| GET | `/health` | status, document count, backends, `admin_required` | — |
+| POST | `/query` | `{question, mode, acts?, model?, max_retries?}` → full report JSON | — |
+| GET | `/report/{id}?fmt=json\|markdown\|csv` | stored report (may contain withheld drafts) | 🔒 |
+| GET | `/history?text=&decision=` | audit search | 🔒 |
+| GET | `/documents` | knowledge-base listing | 🔒 |
+| GET | `/admin/audit-integrity` | verify the tamper-evident audit hash chain | 🔒 |
+| POST | `/admin/purge?retention_days=N` | delete audit records older than N days | 🔒 |
 
-Interactive docs at `/docs` (Swagger UI).
+🔒 endpoints require the `X-Admin-Token` header when `TRUSTGUARD_ADMIN_TOKEN` is set (or
+`security.require_admin_token: true`); otherwise they are open in single-user mode. Interactive docs at
+`/docs` (Swagger UI). This is a static bearer token suitable for a single-node prototype, not multi-user auth.
 
 ## Security & reliability
 

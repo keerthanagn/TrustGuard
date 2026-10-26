@@ -3,11 +3,12 @@ from __future__ import annotations
 
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
 
 from config.settings import get_settings
+from core.access import admin_required, check_admin
 from core.reporting import report_to_claims_csv, report_to_markdown
 from database.db import Database
 from llm.adapters import available_backends
@@ -16,7 +17,17 @@ from middleware.pipeline import build_pipeline
 settings = get_settings()
 db = Database(settings.path("db_path"))
 app = FastAPI(title="TrustGuard API", version="1.0",
-              description="Middleware for hallucination detection and legal fact verification in LLMs.")
+              description="Middleware for hallucination detection and legal fact verification in LLMs. "
+                          "Admin endpoints require the X-Admin-Token header when TRUSTGUARD_ADMIN_TOKEN is set.")
+
+
+def require_admin(x_admin_token: str | None = Header(default=None)):
+    """FastAPI dependency gating admin surfaces (same policy as the UI). Open in single-user mode;
+    requires a matching X-Admin-Token header when a token is configured or require_admin_token is set."""
+    ok, reason = check_admin(settings, x_admin_token)
+    if not ok:
+        raise HTTPException(status_code=401, detail=reason)
+    return True
 
 
 class QueryRequest(BaseModel):
@@ -36,7 +47,8 @@ def _doc_ids_for_acts(acts: Optional[list[str]]) -> Optional[list[str]]:
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "documents": len(db.list_documents()), **available_backends(settings)}
+    return {"status": "ok", "documents": len(db.list_documents()),
+            "admin_required": admin_required(settings), **available_backends(settings)}
 
 
 @app.post("/query")
@@ -53,7 +65,8 @@ def query(req: QueryRequest):
 
 
 @app.get("/report/{request_id}")
-def get_report(request_id: str, fmt: str = Query("json", pattern="^(json|markdown|csv)$")):
+def get_report(request_id: str, fmt: str = Query("json", pattern="^(json|markdown|csv)$"),
+               _: bool = Depends(require_admin)):
     data = db.get_report(request_id)
     if not data:
         raise HTTPException(status_code=404, detail="Unknown request_id")
@@ -68,13 +81,25 @@ def get_report(request_id: str, fmt: str = Query("json", pattern="^(json|markdow
 
 
 @app.get("/history")
-def history(text: str = "", decision: str = "", limit: int = Query(100, le=500)):
+def history(text: str = "", decision: str = "", limit: int = Query(100, le=500),
+            _: bool = Depends(require_admin)):
     return db.search_requests(text=text, decision=decision, limit=limit)
 
 
 @app.get("/documents")
-def documents():
+def documents(_: bool = Depends(require_admin)):
     return db.list_documents()
+
+
+@app.get("/admin/audit-integrity")
+def audit_integrity(_: bool = Depends(require_admin)):
+    return db.verify_audit_integrity()
+
+
+@app.post("/admin/purge")
+def purge(retention_days: int = Query(..., ge=1), _: bool = Depends(require_admin)):
+    removed = db.apply_retention(retention_days)
+    return {"purged": removed, "retention_days": retention_days, "integrity": db.verify_audit_integrity()}
 
 
 def _rehydrate(data: dict):
