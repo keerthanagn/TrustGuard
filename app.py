@@ -42,6 +42,13 @@ def page_query():
     docs = DB.list_documents()
     acts = sorted({d["act_code"] for d in docs if d["index_status"] == "indexed"})
 
+    # Truthful corpus-scope note: name exactly what is ingested and current, and that it is not all of Indian law.
+    current = [d for d in docs if d["index_status"] == "indexed" and d["status"] != "outdated"]
+    titles = ", ".join(d["title"].split(" (")[0] for d in current) or "no documents"
+    st.info(f"**Corpus in use ({len(current)} document(s)):** {titles}. This is a small, fixed corpus — "
+            "**not all of Indian law**. Questions outside it are withheld as insufficient evidence rather than "
+            "answered from the model's memory.")
+
     with st.sidebar:
         st.subheader("Query settings")
         models = available_models(BASE.llm["base_url"])
@@ -89,21 +96,39 @@ def page_query():
         doc_ids = [d["doc_id"] for d in docs if d["act_code"] in set(chosen_acts)]
         pipe = build_pipeline(settings, DB)
         stages = st.status("Running verification pipeline…", expanded=True)
-        with stages:
-            st.write("① Screening the question for malicious intent")
-            st.write("② Retrieving legal evidence")
-            st.write("③ Generating a draft answer (not shown yet)")
-            st.write("④ Extracting atomic claims and verifying each against evidence")
-            st.write("⑤ Screening the draft and applying the strict release policy")
-            t = time.time()
+        t = time.time()
+        try:
             report = pipe.run(question.strip(), doc_ids=doc_ids, mode=mode)
-            stages.update(label=f"Done in {time.time()-t:.1f}s — {report.decision.value}", state="complete",
-                          expanded=False)
+        except Exception as exc:  # the pipeline fails closed, but never let the UI crash
+            stages.update(label=f"Pipeline error — answer withheld ({exc})", state="error", expanded=False)
+            st.error(f"A system error occurred; no answer is released. Details: {exc}")
+            return
+        elapsed = time.time() - t
+
+        # Per-stage status reflecting the stages that actually ran (from backend timings), not a fixed list.
+        STAGE_LABELS = {"question_safety": "Screened the question for malicious intent",
+                        "retrieval": "Retrieved legal evidence", "generation": "Generated a draft (held back)",
+                        "claim_extraction": "Extracted atomic claims", "verification": "Verified claims vs evidence",
+                        "answer_safety": "Screened the draft for unsafe content"}
+        agg: dict[str, float] = {}
+        for tm in report.timings:
+            agg[tm["stage"]] = agg.get(tm["stage"], 0.0) + tm["ms"]
+        with stages:
+            for stage, label in STAGE_LABELS.items():
+                if stage in agg:
+                    st.write(f"✓ {label} · {agg[stage]:.0f} ms")
+            if report.retries:
+                st.write(f"↻ Repaired and re-verified · {report.retries} retry(ies)")
+        is_error = report.decision_category in ("SYSTEM_ERROR",)
+        verdict = "RELEASED" if report.decision.value == "RELEASED" else f"WITHHELD · {report.decision_category}"
+        stages.update(label=f"{verdict} · {elapsed:.1f}s · {report.model}",
+                      state="error" if is_error else "complete", expanded=False)
+
         st.session_state["last_report"] = report.to_dict(include_drafts=True)
         st.session_state["q"] = question
         st.divider()
         render_report(st.session_state["last_report"], rehydrate)
-        st.info("Full details are also on the **Verification Results** page.")
+        st.caption("Full details, evidence and downloads are also on the **Verification Results** page.")
     elif run:
         st.error("Enter a question first.")
 
