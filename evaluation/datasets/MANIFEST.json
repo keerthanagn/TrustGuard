@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T05:08:57+00:00",
+  "generated_at": "2026-10-27T10:34:57+00:00",
   "note": "Integrity manifest. 'test' is CONSUMED (not held-out). 'final_test_v1' is the current frozen final set: do not use it to tune thresholds, select models, or debug examples. All labels are single-reviewer, model-authored (no independent human verification yet) - see STATUS.md.",
   "splits": {
     "dev": {
@@ -143,7 +143,7 @@
       "file": "final_test_v2.jsonl",
       "sha256": "4170827157d6c82b65889a29f573431f8e5ab094db6ff077efe6fd51a3b873a5",
       "n_items": 27,
-      "status": "frozen",
+      "status": "consumed",
       "categories": {
         "ambiguous": 1,
         "benign_about_malicious": 2,
@@ -173,6 +173,44 @@
         "RTI:6",
         "RTI:7",
         "RTI:8"
+      ],
+      "review_status": [
+        "single_reviewer_model_authored"
+      ],
+      "annotators": [
+        "model"
+      ]
+    },
+    "final_test_v3": {
+      "present": true,
+      "file": "final_test_v3.jsonl",
+      "sha256": "40c40e4e62fde3928bc0b904d587f86f1cedc0650fe4af306aecbbd31b0fa941",
+      "n_items": 20,
+      "status": "frozen",
+      "categories": {
+        "ambiguous": 1,
+        "benign_about_malicious": 2,
+        "fabricated_section": 2,
+        "harmful_request": 1,
+        "insufficient_evidence": 1,
+        "invented_minimum_fine": 1,
+        "misleading_premise": 1,
+        "missing_exception": 1,
+        "out_of_scope": 1,
+        "outdated_law": 1,
+        "prompt_injection": 1,
+        "supported": 6,
+        "wrong_punishment": 1
+      },
+      "gold_provisions": [
+        "BNS:111",
+        "BSA:3",
+        "COI:20",
+        "COI:226",
+        "IPC:120B",
+        "ITA:69A",
+        "ITA:71",
+        "RTI:4"
       ],
       "review_status": [
         "single_reviewer_model_authored"
@@ -238,6 +276,50 @@
       "splits": [
         "final_test_v1",
         "final_test_v2"
+      ],
+      "disallowed_shared_refs": [],
+      "allowed_shared_refs": [],
+      "exact_question_duplicates": [],
+      "near_duplicates": [],
+      "clean": true
+    },
+    "dev_vs_final_test_v3": {
+      "splits": [
+        "dev",
+        "final_test_v3"
+      ],
+      "disallowed_shared_refs": [],
+      "allowed_shared_refs": [],
+      "exact_question_duplicates": [],
+      "near_duplicates": [],
+      "clean": true
+    },
+    "test_vs_final_test_v3": {
+      "splits": [
+        "test",
+        "final_test_v3"
+      ],
+      "disallowed_shared_refs": [],
+      "allowed_shared_refs": [],
+      "exact_question_duplicates": [],
+      "near_duplicates": [],
+      "clean": true
+    },
+    "final_test_v1_vs_final_test_v3": {
+      "splits": [
+        "final_test_v1",
+        "final_test_v3"
+      ],
+      "disallowed_shared_refs": [],
+      "allowed_shared_refs": [],
+      "exact_question_duplicates": [],
+      "near_duplicates": [],
+      "clean": true
+    },
+    "final_test_v2_vs_final_test_v3": {
+      "splits": [
+        "final_test_v2",
+        "final_test_v3"
       ],
       "disallowed_shared_refs": [],
       "allowed_shared_refs": [],

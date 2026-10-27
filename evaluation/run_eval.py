@@ -36,7 +36,8 @@ from retrieval.index import registry
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--llm", choices=["scripted", "ollama"], default="scripted")
-    ap.add_argument("--split", choices=["test", "dev", "final_test_v1", "final_test_v2"], default="test")
+    ap.add_argument("--split", choices=["test", "dev", "final_test_v1", "final_test_v2", "final_test_v3"],
+                    default="test")
     ap.add_argument("--systems", nargs="+", default=["base", "retrieval", "trustguard"])
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--out", default="reports/eval")
