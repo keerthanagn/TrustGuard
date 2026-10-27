@@ -11,7 +11,7 @@ REQUIRED_FIELDS = {"id", "split", "category", "question", "gold_refs", "expected
 
 
 def test_all_splits_parse_and_have_fields():
-    for split in ["dev", "test", "final_test_v1"]:
+    for split in ["dev", "test", "final_test_v1", "final_test_v2"]:
         items = load_split(split)
         assert items, f"{split} is empty"
         ids = [it["id"] for it in items]
@@ -31,6 +31,19 @@ def test_final_set_disjoint_from_consumed_test():
     rep = check_splits("test", "final_test_v1")
     assert rep["disallowed_shared_refs"] == []
     assert rep["near_duplicates"] == []
+
+
+def test_final_test_v2_disjoint_from_all_prior():
+    for prior in ("dev", "test", "final_test_v1"):
+        rep = check_splits(prior, "final_test_v2")
+        assert rep["disallowed_shared_refs"] == [], f"v2 shares provisions with {prior}: {rep['disallowed_shared_refs']}"
+        assert rep["exact_question_duplicates"] == [], f"v2 duplicates a {prior} question"
+        assert rep["near_duplicates"] == [], f"v2 near-duplicates {prior}: {rep['near_duplicates']}"
+
+
+def test_final_test_v2_labels_marked():
+    for it in load_split("final_test_v2"):
+        assert it.get("review_status") and it.get("annotator") and it.get("source")
 
 
 def test_final_set_labels_are_honestly_marked():

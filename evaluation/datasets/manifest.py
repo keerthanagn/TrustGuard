@@ -21,8 +21,9 @@ HERE = Path(__file__).parent
 #   frozen   - the current final evaluation set; must not be used for tuning/debugging
 SPLIT_STATUS = {
     "dev": "active",
-    "test": "consumed",        # drove code changes on 2026-10-26 (safety rules, verifier, section ranking)
-    "final_test_v1": "frozen",
+    "test": "consumed",          # drove code changes on 2026-10-26 (safety rules, verifier, section ranking)
+    "final_test_v1": "consumed", # consumed-after-change: Phase 1E/2 code changed its frozen-artifact hash
+    "final_test_v2": "frozen",   # current frozen held-out set (fresh provisions, incl. the new Acts)
     "benchmark": "superseded",
 }
 
@@ -51,7 +52,7 @@ def summarise(split: str) -> dict:
 
 
 def main() -> None:
-    splits = ["dev", "test", "final_test_v1", "benchmark"]
+    splits = ["dev", "test", "final_test_v1", "final_test_v2", "benchmark"]
     manifest = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "note": "Integrity manifest. 'test' is CONSUMED (not held-out). 'final_test_v1' is the current "
@@ -62,6 +63,9 @@ def main() -> None:
         "leakage": {
             "dev_vs_final_test_v1": check_splits("dev", "final_test_v1"),
             "test_vs_final_test_v1": check_splits("test", "final_test_v1"),
+            "dev_vs_final_test_v2": check_splits("dev", "final_test_v2"),
+            "test_vs_final_test_v2": check_splits("test", "final_test_v2"),
+            "final_test_v1_vs_final_test_v2": check_splits("final_test_v1", "final_test_v2"),
         },
     }
     out = HERE / "MANIFEST.json"
