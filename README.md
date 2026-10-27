@@ -6,6 +6,13 @@ TrustGuard sits between a Large Language Model and the user. It intercepts the m
 
 > TrustGuard supports legal **information verification**. It is a research prototype and **not a substitute for a qualified lawyer**.
 
+**Corpus:** 6 Indian statutes (Bharatiya Nyaya Sanhita 2023, Bharatiya Nagarik Suraksha Sanhita 2023,
+Bharatiya Sakshya Adhiniyam 2023, Constitution of India, Information Technology Act 2000, Right to
+Information Act 2005), imported from official sources (eGazette / India Code). Full inventory and provenance
+in [`docs/CORPUS.md`](docs/CORPUS.md); add more via `python -m scripts.import_corpus` (manifest:
+`config/corpus_manifest.yaml`). This is a small, fixed corpus — **not all of Indian law**; out-of-corpus
+questions are withheld as insufficient evidence.
+
 ---
 
 ## Why this is not "an LLM with a few keyword checks"
