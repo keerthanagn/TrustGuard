@@ -158,7 +158,8 @@
     </div>
     <div class="statusline">
       <span class="chip ok"><span class="dot"></span>All phases complete</span>
-      <span class="chip">101 tests passing</span>
+      <span class="chip">107 tests passing</span>
+      <span class="chip">6 statutes indexed</span>
       <span class="chip">live Q&amp;A verified</span>
     </div>
   </header>
@@ -181,7 +182,7 @@
         <div class="s">baselines: 0.00</div>
       </div>
       <div class="tile">
-        <div class="k">101</div>
+        <div class="k">107</div>
         <div class="l">Automated tests passing</div>
         <div class="s">unit · integration · workflow · rendering · security</div>
       </div>
@@ -298,6 +299,10 @@
             <span class="pill consumed">test · 36 · consumed</span>
             <span class="pill frozen">final_test_v1 · 33 · frozen</span>
           </div>
+          <p style="margin:10px 0 0;color:var(--ink-2);font-size:.84rem">Corpus expanded in Phase 2 to 6
+            statutes (added BNSS 2023, BSA 2023, RTI 2005 from official sources). That code change altered the
+            frozen-artifact hash, so the freeze-ledger auto-flagged final_test_v1 <b>consumed-after-change</b>;
+            the numbers above still hold but a fresh final_test_v2 is the next integrity step.</p>
           <ul class="clean" style="margin-top:12px">
             <li><b>Labels:</b> single-reviewer, model-authored — no independent human verification yet.</li>
             <li><b>Thresholds</b> calibrated on <code>dev</code> only, frozen before the held-out run.</li>
@@ -374,6 +379,6 @@ python -m streamlit run app.py&nbsp;&nbsp;<span style="color:var(--muted)"># ope
 
   <footer>
     <span>TrustGuard · Indian legal-domain LLM verification middleware</span>
-    <span class="mono">Updated 2026-10-26 · interactive Q&amp;A live · 101 tests · frozen_artifact_hash d9965e77</span>
+    <span class="mono">Updated 2026-10-27 · 6 statutes · 107 tests · frozen_artifact_hash 8c7475ec (consumed-after-change)</span>
   </footer>
 </div>
