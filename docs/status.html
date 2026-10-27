@@ -158,7 +158,7 @@
     </div>
     <div class="statusline">
       <span class="chip ok"><span class="dot"></span>All phases complete</span>
-      <span class="chip">107 tests passing</span>
+      <span class="chip">109 tests passing</span>
       <span class="chip">6 statutes indexed</span>
       <span class="chip">live Q&amp;A verified</span>
     </div>
@@ -182,7 +182,7 @@
         <div class="s">baselines: 0.00</div>
       </div>
       <div class="tile">
-        <div class="k">107</div>
+        <div class="k">109</div>
         <div class="l">Automated tests passing</div>
         <div class="s">unit · integration · workflow · rendering · security</div>
       </div>
@@ -198,21 +198,21 @@
   <section>
     <div class="sec-head">
       <h2>Does the middleware reduce unsupported legal claims?</h2>
-      <span class="note">frozen held-out set · 33 items · scripted backend</span>
+      <span class="note">frozen held-out set final_test_v2 · 27 fresh items · scripted backend</span>
     </div>
     <div class="card">
-      <div class="chart" role="img" aria-label="Unsupported-claim acceptance: base 0.70, retrieval 0.70, TrustGuard 0.00">
+      <div class="chart" role="img" aria-label="Unsupported-claim acceptance: base 0.79, retrieval 0.79, TrustGuard 0.14">
         <div class="barrow">
           <div class="name">Base LLM<small>no checks</small></div>
-          <div class="track"><div class="fill bad" style="width:70%">0.70</div></div>
+          <div class="track"><div class="fill bad" style="width:79%">0.79</div></div>
         </div>
         <div class="barrow">
           <div class="name">LLM + retrieval<small>RAG, no gate</small></div>
-          <div class="track"><div class="fill bad" style="width:70%">0.70</div></div>
+          <div class="track"><div class="fill bad" style="width:79%">0.79</div></div>
         </div>
         <div class="barrow">
           <div class="name">TrustGuard<small>full pipeline</small></div>
-          <div class="track"><div class="fill good" style="width:100%">0.00 &nbsp;[0.00–0.00 95% CI]</div></div>
+          <div class="track"><div class="fill good" style="width:18%">0.14 &nbsp;[0.00–0.36]</div></div>
         </div>
       </div>
       <div class="axis"><span>0.0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>1.0</span></div>
@@ -228,12 +228,12 @@
     <div class="sec-head"><h2>Three-system comparison</h2><span class="note">same questions, frozen set</span></div>
     <div class="card scroll">
       <table>
-        <caption>Hallucination F1 and safety F1 higher is better; acceptance and rejection rates lower is better.</caption>
+        <caption>final_test_v2 (27 fresh items). Higher is better: hallucination F1. Lower is better: acceptance, rejection. TrustGuard's 0.14 acceptance is two harmful-request phrasings the safety rules don't yet match (safety F1 0.0 on v2's 2 harmful items) — a real coverage gap, not a legal hallucination. Latency omitted (run executed under memory pressure).</caption>
         <thead><tr><th>System</th><th>Halluc. F1</th><th>Unsupp. accept.</th><th>Valid rej.</th><th>Safety F1</th><th>Mean ms</th></tr></thead>
         <tbody>
-          <tr><td>Base LLM</td><td>0.00</td><td>0.70</td><td>0.00</td><td>1.00</td><td>2,279</td></tr>
-          <tr><td>LLM + retrieval</td><td>0.00</td><td>0.70</td><td>0.00</td><td>1.00</td><td>2,807</td></tr>
-          <tr class="hl"><td>TrustGuard</td><td><span class="best">1.00</span></td><td><span class="best">0.00</span></td><td>0.00</td><td>1.00</td><td>4,233</td></tr>
+          <tr><td>Base LLM</td><td>0.00</td><td>0.79</td><td>0.00</td><td>0.00</td><td>—</td></tr>
+          <tr><td>LLM + retrieval</td><td>0.00</td><td>0.79</td><td>0.00</td><td>0.00</td><td>—</td></tr>
+          <tr class="hl"><td>TrustGuard</td><td><span class="best">0.95</span></td><td><span class="best">0.14</span></td><td>0.08</td><td>0.00</td><td>—</td></tr>
         </tbody>
       </table>
     </div>
@@ -297,11 +297,13 @@
           <div>
             <span class="pill active">dev · 30 · tuning</span>
             <span class="pill consumed">test · 36 · consumed</span>
-            <span class="pill frozen">final_test_v1 · 33 · frozen</span>
+            <span class="pill consumed">final_test_v1 · 33 · consumed</span>
+            <span class="pill frozen">final_test_v2 · 27 · frozen</span>
           </div>
           <p style="margin:10px 0 0;color:var(--ink-2);font-size:.84rem">Corpus expanded in Phase 2 to 6
-            statutes (added BNSS 2023, BSA 2023, RTI 2005 from official sources). That code change altered the
-            frozen-artifact hash, so the freeze-ledger auto-flagged final_test_v1 <b>consumed-after-change</b>;
+            statutes (added BNSS 2023, BSA 2023, RTI 2005 from official sources). Those code changes altered the
+            frozen-artifact hash, so final_test_v1 became <b>consumed-after-change</b> and a fresh, fully
+            disjoint <b>final_test_v2</b> (27 items on the new provisions) is now the held-out set;
             the numbers above still hold but a fresh final_test_v2 is the next integrity step.</p>
           <ul class="clean" style="margin-top:12px">
             <li><b>Labels:</b> single-reviewer, model-authored — no independent human verification yet.</li>
@@ -379,6 +381,6 @@ python -m streamlit run app.py&nbsp;&nbsp;<span style="color:var(--muted)"># ope
 
   <footer>
     <span>TrustGuard · Indian legal-domain LLM verification middleware</span>
-    <span class="mono">Updated 2026-10-27 · 6 statutes · 107 tests · frozen_artifact_hash 8c7475ec (consumed-after-change)</span>
+    <span class="mono">Updated 2026-10-27 · 6 statutes · 109 tests · final_test_v2 frozen · hash 8c7475ec</span>
   </footer>
 </div>
