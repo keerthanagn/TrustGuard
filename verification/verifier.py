@@ -223,8 +223,16 @@ class ClaimVerifier:
             signals.append(SignalResult("punishment", None, None, "claim states no punishment"))
 
         # 6. attribution ----------------------------------------------------------------------
+        # A claim cannot be "misattributed" to another provision when the provision it cites literally
+        # contains the claimed figures and punishment: the cited section does support it, and a higher NLI
+        # score from a different section only reflects generic statutory boilerplate shared between
+        # sections (e.g. the identical "second or subsequent conviction ... not less than one year ...
+        # five years" formula appears verbatim in many offences). Suppress misattribution in that case.
+        cited_numeric_ok = bool(numeric_matches) and not numeric_conflicts and not numeric_absent
+        cited_punishment_ok = bool(claimed_pun) and not missing_pun and not only_fine
+        cited_supported = bool(ref_evidence) and (cited_numeric_ok or cited_punishment_ok)
         misattributed = None
-        if ref_evidence:
+        if ref_evidence and not cited_supported:
             ref_ids = {e.chunk_id for e in ref_evidence}
             ref_entail = max((per_ev_entail[k] for k, e in enumerate(relevant) if e.chunk_id in ref_ids), default=0.0)
             others = [(per_ev_entail[k], e) for k, e in enumerate(relevant)
@@ -237,6 +245,9 @@ class ClaimVerifier:
             signals.append(SignalResult("attribution", misattributed is None, round(ref_entail, 3),
                                         f"statement matches {misattributed.citation}, not the cited provision"
                                         if misattributed else "statement checked against the cited provision"))
+        elif ref_evidence:
+            signals.append(SignalResult("attribution", True, None,
+                                        "cited provision's own figures/punishment match the claim"))
 
         # 7. scope (missing exceptions / over-generalisation) -----------------------------------
         absolutes = STRONG_ABSOLUTES.intersection(claim.absolute_terms)
@@ -285,12 +296,16 @@ class ClaimVerifier:
                                  and misattributed is None and not overgeneral
                                  and (bool(numeric_matches) or (bool(claimed_pun) and not missing_pun)))
         if deterministic_support:
+            # show the CITED provision as the supporting evidence (not a different section that merely shares
+            # generic statutory wording and happened to score high on NLI).
+            cited_entailing = [e for k, e in enumerate(relevant)
+                               if e.chunk_id in {r.chunk_id for r in ref_evidence} and per_ev_entail[k] >= tau_e]
             return result(ClaimStatus.SUPPORTED,
                           f"The cited provision ({ref_evidence[0].citation}) states the claimed "
                           + ("figures and punishment" if numeric_matches and claimed_pun else
                              "figures" if numeric_matches else "punishment")
                           + f"; all deterministic checks passed (NLI entailment {best_entail:.2f}).",
-                          supporting=(supporting if best_entail >= tau_e else ref_evidence[:2]))
+                          supporting=(cited_entailing or ref_evidence[:2]))
 
         # NLI contradiction is the decider only when nothing entails the claim and no deterministic support
         # exists. A soft NLI "contradiction" with matching figures usually comes from an illustration/proviso.

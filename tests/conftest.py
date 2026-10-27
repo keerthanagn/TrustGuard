@@ -22,7 +22,14 @@ FIXTURE_CHUNKS = [
      "liable to fine."),
     ("BNS", "303", "Section", "Theft",
      "303. (2) Whoever commits theft shall be punished with imprisonment of either description for a term which "
-     "may extend to three years, or with fine, or with both."),
+     "may extend to three years, or with fine, or with both and in case of second or subsequent conviction of "
+     "any person under this section, he shall be punished with rigorous imprisonment for a term which shall not "
+     "be less than one year but which may extend to five years and with fine."),
+    ("BNS", "295", "Section", "Sale, etc., of obscene objects to child",
+     "295. Whoever sells or distributes to any child any obscene object shall be punished on first conviction "
+     "with imprisonment which may extend to three years and with fine, and in the event of a second or "
+     "subsequent conviction, with rigorous imprisonment for a term which shall not be less than one year but "
+     "which may extend to five years and with fine."),
     ("BNS", "307", "Section", "Theft after preparation made for causing death, hurt or restraint",
      "307. Whoever commits theft, having made preparation for causing death, or hurt, or restraint, shall be "
      "punished with rigorous imprisonment for a term which may extend to ten years, and shall also be liable to fine."),
