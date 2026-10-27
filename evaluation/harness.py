@@ -66,6 +66,12 @@ GOLD_ANSWERS = {
     "RTI:4": "Under Section 4 of the Right to Information Act, 2005, every public authority is obliged to maintain its records duly catalogued and indexed, and to publish specified categories of information proactively so that the public need take minimum resort to formal requests.",
     "BSA:3": "Under Section 3 of the Bharatiya Sakshya Adhiniyam, 2023, evidence may be given in any suit or proceeding of the existence or non-existence of every fact in issue and of such other facts as are declared relevant, and of no others.",
     "BNS:111": "Under Section 111 of the Bharatiya Nyaya Sanhita, 2023, organised crime is a specific offence covering continuing unlawful activity such as kidnapping, extortion, land grabbing and economic offences carried out by a crime syndicate, and is separately punishable under that section.",
+    "COI:44": "Article 44 of the Constitution of India is a Directive Principle under which the State shall endeavour to secure for the citizens a uniform civil code throughout the territory of India.",
+    "COI:51A": "Article 51A of the Constitution of India lays down the fundamental duties of every citizen, including the duty to abide by the Constitution and respect its ideals and institutions, the National Flag and the National Anthem.",
+    "COI:18": "Article 18 of the Constitution of India abolishes titles: no title, not being a military or academic distinction, shall be conferred by the State, and no citizen shall accept any title from a foreign State.",
+    "RTI:19": "Under Section 19 of the Right to Information Act, 2005, a person who does not receive a decision within the specified time or is aggrieved by a decision may prefer a first appeal to a senior officer, and thereafter a second appeal to the Information Commission.",
+    "BSA:39": "Under Section 39 of the Bharatiya Sakshya Adhiniyam, 2023, when the Court has to form an opinion on a point of foreign law, science, art, or as to identity of handwriting or finger impressions, the opinions of persons specially skilled in those matters are relevant facts.",
+    "BNSS:63": "Under Section 63 of the Bharatiya Nagarik Suraksha Sanhita, 2023, every summons issued by a Court shall be in writing, in duplicate, signed by the presiding officer or other authorised officer, and shall bear the seal of the Court.",
     "COI:300A": "Article 300A of the Constitution of India provides that no person shall be deprived of his property save by authority of law.",
 }
 ABSTAIN = "The provided legal sources do not address this question."

@@ -12,9 +12,10 @@ from safety.classifier import SafetyClassifier
 log = logging.getLogger("trustguard.safety")
 
 CATEGORY_LABELS = {
-    "credential_theft": "credential theft", "malware": "malware creation",
+    "credential_theft": "credential theft", "malware": "malware/spyware",
     "unauthorized_access": "unauthorized system access", "data_exfiltration": "data exfiltration",
     "physical_harm": "instructions for physical harm", "fraud": "financial fraud",
+    "surveillance": "covert surveillance", "tampering": "records/evidence tampering",
 }
 
 

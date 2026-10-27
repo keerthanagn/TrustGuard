@@ -19,6 +19,21 @@ CATEGORY_PATTERNS: dict[str, list[str]] = {
     "malware": [
         r"\b(write|create|build|develop|code|generate)\s+(a\s+)?(virus|worm|trojan|ransomware|malware|rootkit|botnet)\b",
         r"\bransomware\b", r"\bkeylogger\b", r"payload\s+that", r"reverse\s+shell", r"obfuscate\s+(the\s+)?(payload|malware)",
+        r"\b(spyware|stalkerware)\b",
+        r"\b(deploy|install|plant|drop|load)\s+(the\s+|a\s+|some\s+)?(spyware|stalkerware|malware|keylogger|rootkit|backdoor|virus|trojan|ransomware)\b",
+    ],
+    "surveillance": [
+        r"surveillance\s+(software|tool|app|application)",
+        r"\b(spy\s+on|secretly\s+monitor|covertly\s+(monitor|track)|monitor|track|intercept)\b"
+        r"(\s+\w+){0,4}\s+(phone|messages|texts|calls|device|laptop|location|whatsapp|chats?|emails?)",
+        r"without\s+(their|his|her|the\s+\w+'?s?|the\s+user'?s?|anyone'?s?)\s+(knowledge|consent|permission)",
+        r"\b(read|capture|access)\s+(someone|a\s+person|my\s+\w+|their|his|her)'?s?\s+(messages|texts|chats?|emails?|calls)",
+    ],
+    "tampering": [
+        r"tamper\s+with\s+(\w+\s+){0,4}(records?|documents?|logs?|evidence|database|files?|source|data)",
+        r"\b(erase|delete|wipe|destroy|alter|falsify|modify|forge)\s+(the\s+|all\s+|any\s+)?(audit\s+)?(logs?|records?|evidence|trail|database\s+entries)",
+        r"cover\s+(my|your|their|his|her|its)\s+tracks",
+        r"\b(plant|fabricate|forge)\s+(false\s+)?evidence",
     ],
     "unauthorized_access": [
         r"\b(hack|break)\s+into\b",
@@ -56,7 +71,7 @@ OPERATIONAL_CUES = [
     # bare imperative to create a harmful artefact or perform an intrusive action (no article needed)
     r"\b(write|create|build|develop|generate|make|code|program)\s+(me\s+)?(a|an|the|some|working)?\s*"
     r"(malware|ransomware|virus|worm|trojan|spyware|keylogger|rootkit|botnet|exploit|payload|backdoor)\b",
-    r"\b(install|deploy|plant|embed|inject|set\s*up)\s+(a|an|the|my|your|their|some|it)?\s*\w+",
+    r"\b(install|deploy|plant|embed|inject|set\s*up)(?:ing|s)?\s+(a|an|the|my|your|their|some|it)?\s*\w+",
 ]
 
 LEGAL_CONTEXT_CUES = [

@@ -280,10 +280,15 @@ class ClaimVerifier:
             return result(ClaimStatus.CONTRADICTED,
                           f"The statement is supported by {misattributed.citation}, not by the provision it cites.",
                           supporting=[misattributed], contradicting=ref_evidence[:1])
-        if overgeneral and best_entail < 0.9:
+        # An over-generalised claim (strong absolute wording whose cited provision text itself contains
+        # exceptions/provisos) is contradicted regardless of NLI entailment: NLI often entails the broad
+        # claim highly precisely because it misses the omitted exception. The source-has-exception condition
+        # in `overgeneral` keeps genuinely-absolute provisions (no exception markers) from being flagged.
+        if overgeneral:
             return result(ClaimStatus.CONTRADICTED,
-                          "The claim states an absolute rule, but the source provision contains exceptions or "
-                          "conditions that the claim omits.", contradicting=target[:2])
+                          "The claim states an absolute rule (" + ", ".join(sorted(absolutes)) + "), but the "
+                          "cited provision contains exceptions or conditions that the claim omits.",
+                          contradicting=target[:2])
         # Deterministic support: the claim cites a real, current provision and its hard facts (figures and
         # punishments) are all consistent with that provision's own text (matches, no conflicts, no absents).
         # For such claims the deterministic legal checks are authoritative and override a soft NLI signal:

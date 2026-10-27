@@ -48,6 +48,14 @@ FIXTURE_CHUNKS = [
      "from the Act text.)"),
     ("COI", "21", "Article", "Protection of life and personal liberty",
      "21. No person shall be deprived of his life or personal liberty except according to procedure established by law."),
+    ("COI", "20", "Article", "Protection in respect of conviction for offences",
+     "20. (1) No person shall be convicted of any offence except for violation of a law in force at the time of "
+     "the commission of the act charged as an offence. (2) No person shall be prosecuted and punished for the "
+     "same offence more than once. (3) No person accused of any offence shall be compelled to be a witness "
+     "against himself."),
+    ("COI", "17", "Article", "Abolition of Untouchability",
+     "17. Untouchability is abolished and its practice in any form is forbidden. The enforcement of any "
+     "disability arising out of untouchability shall be an offence punishable in accordance with law."),
 ]
 
 
