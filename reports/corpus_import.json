@@ -1,0 +1,89 @@
+[
+  {
+    "act_code": "CPA",
+    "title": "Consumer Protection Act, 2019 (Act 35 of 2019)",
+    "download": {
+      "ok": false,
+      "url": null,
+      "attempts": [
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/15256/1/a2019-35.pdf",
+          "http": 504,
+          "note": "http error"
+        },
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/15256/1/a2019-35.pdf",
+          "note": "curl fallback failed"
+        },
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/12808/1/the_consumer_protection_act,_2019_no._35_of_2019_date_09.08.2019.pdf",
+          "http": 504,
+          "note": "http error"
+        },
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/12808/1/the_consumer_protection_act,_2019_no._35_of_2019_date_09.08.2019.pdf",
+          "note": "curl fallback failed"
+        }
+      ]
+    },
+    "result": "download failed (retryable)"
+  },
+  {
+    "act_code": "MVA",
+    "title": "Motor Vehicles Act, 1988 (Act 59 of 1988)",
+    "download": {
+      "ok": false,
+      "url": null,
+      "attempts": [
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/1798/1/eng.pdf",
+          "http": 504,
+          "note": "http error"
+        },
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/1798/1/eng.pdf",
+          "note": "curl fallback failed"
+        },
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/7477/1/a1988-59.pdf",
+          "http": 504,
+          "note": "http error"
+        },
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/7477/1/a1988-59.pdf",
+          "note": "curl fallback failed"
+        }
+      ]
+    },
+    "result": "download failed (retryable)"
+  },
+  {
+    "act_code": "PWDVA",
+    "title": "Protection of Women from Domestic Violence Act, 2005 (Act 43 of 2005)",
+    "download": {
+      "ok": false,
+      "url": null,
+      "attempts": [
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/2021/5/A2005-43.pdf",
+          "http": 504,
+          "note": "http error"
+        },
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/2021/5/A2005-43.pdf",
+          "note": "curl fallback failed"
+        },
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/15304/1/domviolence.pdf",
+          "http": 504,
+          "note": "http error"
+        },
+        {
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/15304/1/domviolence.pdf",
+          "note": "curl fallback failed"
+        }
+      ]
+    },
+    "result": "download failed (retryable)"
+  }
+]

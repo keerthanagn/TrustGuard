@@ -13,6 +13,11 @@ ACT_ALIASES: dict[str, list[str]] = {
     "IPC": [r"indian\s+penal\s+code", r"\bipc\b"],
     "BNSS": [r"bharatiya\s+nagarik\s+suraksha\s+sanhita", r"\bbnss\b"],
     "BSA": [r"bharatiya\s+sakshya\s+adhiniyam", r"\bbsa\b"],
+    "RTI": [r"right\s+to\s+information\s+act", r"\brti\s+act\b", r"\brti\b"],
+    "CPA": [r"consumer\s+protection\s+act", r"\bcpa\b"],
+    "MVA": [r"motor\s+vehicles?\s+act", r"\bmva\b", r"\bmv\s+act\b"],
+    "PWDVA": [r"protection\s+of\s+women\s+from\s+domestic\s+violence\s+act", r"domestic\s+violence\s+act",
+              r"\bpwdva\b", r"\bdv\s+act\b"],
 }
 ACT_NAMES = {
     "BNS": "Bharatiya Nyaya Sanhita, 2023",
@@ -21,6 +26,10 @@ ACT_NAMES = {
     "IPC": "Indian Penal Code, 1860",
     "BNSS": "Bharatiya Nagarik Suraksha Sanhita, 2023",
     "BSA": "Bharatiya Sakshya Adhiniyam, 2023",
+    "RTI": "Right to Information Act, 2005",
+    "CPA": "Consumer Protection Act, 2019",
+    "MVA": "Motor Vehicles Act, 1988",
+    "PWDVA": "Protection of Women from Domestic Violence Act, 2005",
 }
 _ACT_RES = {code: [re.compile(p, re.I) for p in pats] for code, pats in ACT_ALIASES.items()}
 
